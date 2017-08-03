@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "eslint . --fix"
+    "lint": "eslint . --fix",
+    "validate": "npm ls"
   },
   "pre-commit": [
     "lint"
@@ -19,7 +20,8 @@
   },
   "devDependencies": {
     "eslint": "^4.3.0",
-    "eslint-config-xo-space": "^0.16.0"
+    "eslint-config-xo-space": "^0.16.0",
+    "precommit-hook": "^3.0.0"
   },
   "eslintConfig": {
     "extends": "xo-space",
