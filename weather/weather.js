@@ -18,7 +18,6 @@ const getWeather = (latitude, longitude, callback) => {
   });
 };
 
-
 module.exports = {
   getWeather
 };
