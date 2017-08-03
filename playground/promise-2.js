@@ -1,7 +1,7 @@
 // wrapping a library that does not support promises with promises
 const request = require('request');
 
-const geocodeAddress = (address) => {
+const geocodeAddress = address => {
   let encodedAddress = encodeURIComponent(address);
 
   return new Promise((resolve, reject) => {
