@@ -26,7 +26,6 @@
       "prefer-promise-reject-errors": 0
     },
     "env": {
-      "jest": true,
       "node": true
     }
   }
