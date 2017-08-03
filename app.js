@@ -1,5 +1,6 @@
 const yargs = require('yargs');
-const geocode = require('./geocode/geocode');
+// const geocode = require('./geocode/geocode');
+const geocode = require('./playground/promise-2');
 const weather = require('./weather/weather');
 
 const argv = yargs
@@ -15,10 +16,22 @@ const argv = yargs
   .alias('help', 'h')
   .argv;
 
-geocode.geocodeAddress(argv.address, (errorMessage, results) => {
-  if (errorMessage) {
-    console.log(errorMessage);
-  } else {
+// geocode.geocodeAddress(argv.address, (errorMessage, results) => {
+//   if (errorMessage) {
+//     console.log(errorMessage);
+//   } else {
+//     weather.getWeather(results.latitude, results.longitude, (err, res) => {
+//       if (err) {
+//         console.log(err);
+//       } else {
+//         console.log(`It's currently ${res.temperature} but it feels like ${res.apparentTemperature}.`);
+//       }
+//     });
+//   }
+// });
+
+geocode.geocodeAddress(argv.address)
+  .then(results => {
     weather.getWeather(results.latitude, results.longitude, (err, res) => {
       if (err) {
         console.log(err);
@@ -26,5 +39,6 @@ geocode.geocodeAddress(argv.address, (errorMessage, results) => {
         console.log(`It's currently ${res.temperature} but it feels like ${res.apparentTemperature}.`);
       }
     });
-  }
-});
+  }, error => {
+    console.log(error);
+  });
