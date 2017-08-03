@@ -1,6 +1,5 @@
 const yargs = require('yargs');
-// const geocode = require('./geocode/geocode');
-const geocode = require('./playground/promise-2');
+const geocode = require('./geocode/geocode');
 const weather = require('./weather/weather');
 
 const argv = yargs
@@ -16,29 +15,26 @@ const argv = yargs
   .alias('help', 'h')
   .argv;
 
-// geocode.geocodeAddress(argv.address, (errorMessage, results) => {
-//   if (errorMessage) {
-//     console.log(errorMessage);
-//   } else {
-//     weather.getWeather(results.latitude, results.longitude, (err, res) => {
-//       if (err) {
-//         console.log(err);
-//       } else {
-//         console.log(`It's currently ${res.temperature} but it feels like ${res.apparentTemperature}.`);
-//       }
-//     });
-//   }
-// });
-
 geocode.geocodeAddress(argv.address)
-  .then(results => {
-    weather.getWeather(results.latitude, results.longitude, (err, res) => {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log(`It's currently ${res.temperature} but it feels like ${res.apparentTemperature}.`);
-      }
-    });
-  }, error => {
-    console.log(error);
+  .then(response => {
+    if (response.data.status === 'ZERO_RESULTS') {
+      throw new Error('Unable to find that address');
+    }
+
+    let lat = response.data.results[0].geometry.location.lat;
+    let lng = response.data.results[0].geometry.location.lng;
+
+    return weather.getWeather(lat, lng);
+  })
+  .then(response => {
+    let temperature = response.data.currently.temperature;
+    let apparentTemperature = response.data.currently.apparentTemperature;
+    console.log(`It's currently ${temperature} but it feels like ${apparentTemperature}.`);
+  })
+  .catch(error => {
+    if (error.code === 'ENOTFOUND') {
+      console.log('Unable to connect to API servers');
+    } else {
+      console.log(error.message);
+    }
   });
